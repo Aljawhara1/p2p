@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+
+body {
+    background-color: #333;
+    /* display: grid; */
+    height: 100vh;
+    /* place-items: center; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.btnsControls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+button {
+    background-color: skyblue;
+    color: #fff;
+    border: none;
+    padding: 10px 35px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.join-inp {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse;
+}
+
+
+#jInp {
+    outline: none;
+    background-color: #222;
+    width: 40%;
+    border: 2.5px solid skyblue;
+    padding: 10px 15px;
+    font-size: 20px;
+    transition: 0.4s;
+}
+
+
+.streams {
+    display: flex;
+    justify-content: space-around;
+}
+
+video {
+    border: 2.5px solid skyblue;
+    width: 48%;
+    height: 300px;
+}
+
+.idRoom {
+    background-color: skyblue;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 22px;
+    color: black;
+    width: fit-content;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+
+#meet {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    transform: scale(0);
+    transition: .4s;
+}
+
+#meet.show{
+    transform: scale(1);
+}
+
+iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
+
+}

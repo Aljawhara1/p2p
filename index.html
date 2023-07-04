@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FirebaseRTC</title>
+    <link rel="stylesheet" href="./main.css">
+    <script src='https://meet.jit.si/external_api.js' defer></script>
+    <script type="module" src="./app.js" defer></script>
+</head>
+
+<body>
+    <div class="btnsControls">
+        <!-- <button id="openStream">Open stream</button> -->
+        <button id="createRoom">Create room</button>
+    </div>
+    
+    <div class="join-inp">
+        <button id="join">Join</button>
+        <input type="text" id="jInp" placeholder="Room ID :">
+    </div>
+
+    
+    <div class="streams">
+        <video src="" id="myVid" controls></video>
+        <video src="" id="otherVid" controls></video>
+    </div>
+
+    
+     <div class="idRoom"></div>
+    <div id="meet"></div>
+</body>
+
+</html>
