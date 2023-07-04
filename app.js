@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, child, get, set, onValue, push, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-import { $, cre, log, uniqueID } from "./cocktail.js"
+import { $, copyToClipboard, cre, log, uniqueID } from "./cocktail.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyD2XITbWDRqCkxpIRQF0nbiIGTtMigrrHI",
@@ -43,6 +43,7 @@ async function startSTream(video) {
         // ev.streams[0].getTracks().forEach(track => {
         //     remoteStream.addTrack(track)
         // })
+        console.log(ev);
         $('#otherVid').srcObject = ev.streams[0]
         $('#otherVid').play()
     })
@@ -75,6 +76,7 @@ async function createRoom(id) {
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
     pc.addEventListener('icecandidate', (ev) => {
+      if(ev.candidate){
         update(rooms, {
             candidate: ev.candidate.toJSON(),
             offer: {
@@ -103,6 +105,7 @@ async function createRoom(id) {
                 }
             }
         })
+      }
     })
     // set(rooms, {
         // offer: {
@@ -169,9 +172,8 @@ async function joinRoom() {
     })
     pc.addEventListener('icecandidate', (ev) => {
         const mainId = $('#jInp').value ? $('#jInp').value.split('/')[0] : null;
-        const candidate = ev.candidate.toJSON();
         const room = ref(db, `${mainId}/${uid}`);
-        if (candidate) [
+        if (ev.candidate) [
             update(room, {
                 candidate: ev.candidate.toJSON()
             })
@@ -206,3 +208,8 @@ $('#join').on('click', async () => {
 // set(subRoom,{
 //     data:'haha'
 // })
+
+$('.idRoom').on('click',function(){
+    copyToClipboard(this.textContent);
+    this.classList.add('copied')
+})

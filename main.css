@@ -69,12 +69,17 @@ video {
     background-color: skyblue;
     padding: 10px 20px;
     font-weight: bold;
-    font-size: 22px;
+    /* font-size: 22px; */
     color: black;
-    width: fit-content;
+    /* width: fit-content; */
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    max-width: 100%;
+    /* text-wrap: inherit; */
+    overflow-wrap: anywhere;
 }
-
+.idRoom.copied{
+    background-color: rgba(72, 228, 72, 0.63);
+} 
 
 #meet {
     position: fixed;
