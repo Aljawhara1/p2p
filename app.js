@@ -19,7 +19,15 @@ const turnServer = {
             urls: 'turn:relay1.expressturn.com:3478',
             username: 'efTFUK5RO0V4HKY39F',
             credential: 'FXVkQQAKEYTlOL1K'
-        }
+        },
+        { urls: 'stun:stun.services.mozilla.com' },
+        { urls: "stun:stun1.l.google.com:19302" },
+        { urls: "stun:stun2.l.google.com:19302" },
+        { urls: "stun:stun3.l.google.com:19302" },
+        { urls: "stun:stun4.l.google.com:19302" },
+        { urls: "stun:stun.ekiga.net" },
+        { urls: "stun:stun.voipstunt.com" },
+        { urls: "stun:stun.voiparound.com" },
     ]
 }
 // Initialize Firebase
@@ -171,4 +179,4 @@ $('.idRoom').on('click', function () {
     copyToClipboard(this.textContent);
     this.classList.add('copied')
 });
-console.log('update-3 with turn server');
+console.log('update-4 with turn & stun servers');
