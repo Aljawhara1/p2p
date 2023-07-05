@@ -13,19 +13,22 @@ const firebaseConfig = {
 
 };
 
-const turnServer =await (await fetch("https://rowaq.metered.live/api/v1/turn/credentials?apiKey=9e33b5b9f71993095badeee7dc80615fd001")).json();
+const turnServer = {
+    iceServers: [
+        {
+            urls: 'turn:relay1.expressturn.com:3478',
+            username: 'efTFUK5RO0V4HKY39F',
+            credential: 'FXVkQQAKEYTlOL1K'
+        }
+    ]
+}
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const servers = {
-    iceServers:turnServer,
-    iceCandidatePoolSize: 10,
-};
 const uid = uniqueID();
 console.log(uid);
-const pc = new RTCPeerConnection(servers);
+const pc = new RTCPeerConnection(turnServer);
 const remoteStream = new MediaStream();
-
 
 //make start function 
 async function startSTream(video) {
@@ -40,7 +43,7 @@ async function startSTream(video) {
         ev.streams[0].getTracks().forEach(track => {
             remoteStream.addTrack(track)
         })
-        console.log(ev);    
+        console.log(ev);
         // $('#otherVid').srcObject = ev.streams[0]
         // $('#otherVid').play()
     })
@@ -60,14 +63,13 @@ async function startSTream(video) {
         }
     };
 };
-//8653fd9a23edf6ddbb1dcd96  username
-//spDJhfMMoqz87Cnu pass
+
 
 let stream;
-window.addEventListener('beforeunload',(e)=>{
+window.addEventListener('beforeunload', (e) => {
     e.preventDefault();
-    e.returnValue = ''
-    alert('woooo')
+    e.returnValue = '';
+    console.log(true, 'ended');
 })
 const id = uniqueID();
 
@@ -162,63 +164,11 @@ async function joinRoom() {
 $('#join').on('click', async () => {
     await (await startSTream($('#myVid'))).startStream()
     joinRoom();
-    // var frame = new MeteredFrame(); 
-    // frame.init({
-    //     roomURL: "rowaq.metered.live/my-room",
-    // }, $('#metered-frame'));
-    // $('#meet').classList.add('show')
 })
-//document.getElementById("metered-frame")
-console.log($('#metered-frame'));
-// test database firebase 
-// set(ref(db , uniqueID()) ,{
-//     name:'Yousef',
-//     answer:'Test'
-// })
-// // 
-// let room = ref(db,'1D3s5c2T7v8I6A7Q4B7f3O');
-// update(room,{
-//     update:'updatedd',
-//     lol:'lol'
-// })
 
-// let subRoom = ref(db,'1D3s5c2T7v8I6A7Q4B7f3O/subRoom');
-// set(subRoom,{
-//     data:'haha'
-// })
 
 $('.idRoom').on('click', function () {
     copyToClipboard(this.textContent);
     this.classList.add('copied')
-})
-
-// const lectures = ref(db, 'المستوي الاول تمهيدي');
-// set(lectures, {
-//     l1: {
-//         name: 'المحاضره الاولي',
-//         url: 'https://youtube.com'
-//     }
-// })
-
-
-// const options = {
-//     method: 'POST',
-//     headers: {
-//       accept: 'application/json',
-//       'content-type': 'application/json',
-//       authorization: 'Basic NURQdHhraFRmdU5jbHRoNXJDVkhFRmswTHVSSXdQWmQwMVJKVXJ5Nzl5Vjp5eTIwMzAw'
-//     },
-//     body: JSON.stringify({record: true, name: 'Test live'})
-//   };
-  
-//   fetch('https://ws.api.video/live-streams', options)
-//     .then(response => response.json())
-//     .then(response => {
-//         console.log(response);
-//         const ifr = response.assets.iframe;
-//         $('#meet').innerHTML=ifr;
-//         $('#meet').classList.add('show')
-        
-//     })
-//     .catch(err => console.error(err));
-console.log('update-2 with turn server');
+});
+console.log('update-3 with turn server');
