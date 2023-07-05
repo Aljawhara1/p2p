@@ -13,15 +13,12 @@ const firebaseConfig = {
 
 };
 
+const turnServer =await (await fetch("https://rowaq.metered.live/api/v1/turn/credentials?apiKey=9e33b5b9f71993095badeee7dc80615fd001")).json();
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const servers = {
-    iceServers: [
-        {
-            urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
-        },
-    ],
+    iceServers:turnServer,
     iceCandidatePoolSize: 10,
 };
 const uid = uniqueID();
@@ -40,12 +37,12 @@ async function startSTream(video) {
 
     pc.addEventListener('track', (ev) => {
         console.log('steeee');
-        // ev.streams[0].getTracks().forEach(track => {
-        //     remoteStream.addTrack(track)
-        // })
-        console.log(ev);
-        $('#otherVid').srcObject = ev.streams[0]
-        $('#otherVid').play()
+        ev.streams[0].getTracks().forEach(track => {
+            remoteStream.addTrack(track)
+        })
+        console.log(ev);    
+        // $('#otherVid').srcObject = ev.streams[0]
+        // $('#otherVid').play()
     })
 
     $('#otherVid').srcObject = remoteStream;
@@ -63,10 +60,15 @@ async function startSTream(video) {
         }
     };
 };
-
+//8653fd9a23edf6ddbb1dcd96  username
+//spDJhfMMoqz87Cnu pass
 
 let stream;
-
+window.addEventListener('beforeunload',(e)=>{
+    e.preventDefault();
+    e.returnValue = ''
+    alert('woooo')
+})
 const id = uniqueID();
 
 async function createRoom(id) {
@@ -76,73 +78,44 @@ async function createRoom(id) {
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
     pc.addEventListener('icecandidate', (ev) => {
-      if(ev.candidate){
-        update(rooms, {
-            candidate: ev.candidate.toJSON(),
-            offer: {
-                type: offer.type,
-                sdp: offer.sdp
-            }
-        })
+        if (ev.candidate) {
+            update(rooms, {
+                candidate: ev.candidate.toJSON(),
+                offer: {
+                    type: offer.type,
+                    sdp: offer.sdp
+                }
+            })
 
-        onValue(ref(db), async (snap) => {
-            const data = snap.val()[id];
-            // console.log('New data is : ', data);
-            for (const key in data) {
-                if (key !== uid) {
-                    const myRoom = data[key];
-    
-    
-                    if (!pc.currentRemoteDescription && myRoom.answer && myRoom.candidate) {
-                        console.log('Set remote description: ', myRoom.answer);
-                        const answer = new RTCSessionDescription(myRoom.answer)
-                        await pc.setRemoteDescription(answer);
-                        console.log(myRoom.candidate , 'demon-slayer');
-                        const candidate = new RTCIceCandidate(myRoom.candidate);
-                        pc.addIceCandidate(candidate);
-    
+            onValue(ref(db), async (snap) => {
+                const data = snap.val()[id];
+                // console.log('New data is : ', data);
+                for (const key in data) {
+                    if (key !== uid) {
+                        const myRoom = data[key];
+
+
+                        if (!pc.currentRemoteDescription && myRoom.answer && myRoom.candidate) {
+                            console.log('Set remote description: ', myRoom.answer);
+                            const answer = new RTCSessionDescription(myRoom.answer)
+                            await pc.setRemoteDescription(answer);
+                            console.log(myRoom.candidate, 'demon-slayer');
+                            const candidate = new RTCIceCandidate(myRoom.candidate);
+                            pc.addIceCandidate(candidate);
+
+                        }
                     }
                 }
-            }
-        })
-      }
+            })
+        }
     })
-    // set(rooms, {
-        // offer: {
-        //     type: offer.type,
-        //     sdp: offer.sdp
-        // }
-
-    // })
-    // onValue(ref(db), async (snap) => {
-    //     const data = snap.val()[id];
-    //     console.log('New data is : ', data);
-    //     for (const key in data) {
-    //         if (key == uid) {
-    //             console.log(key);
-    //             const myRoom = data[key];
 
 
-    //             if (!pc.currentRemoteDescription && myRoom.answer && myRoom.candidate) {
-    //                 console.log('Set remote description: ', myRoom.answer);
-    //                 const answer = new RTCSessionDescription(myRoom.answer)
-    //                 await pc.setRemoteDescription(answer);
-    //                 console.log(myRoom.candidate , 'demon-slayer');
-    //                 const candidate = new RTCIceCandidate(myRoom.candidate);
-    //                 pc.addIceCandidate(candidate);
-
-    //             }
-    //         }
-    //     }
-    // })
     $('.idRoom').textContent = `${id}/${uid}`;
     // $('#meet').classList.add('show')
 }
 
 
-// let room = ref(db , '7s3y8J2d4x4U1T2z6K7W5Y');
-// let offer = await get(child(room,'offer'));
-// console.log(offer.val());
 
 $('#createRoom').on('click', () => {
     createRoom(id)
@@ -188,10 +161,15 @@ async function joinRoom() {
 
 $('#join').on('click', async () => {
     await (await startSTream($('#myVid'))).startStream()
-    joinRoom()
+    joinRoom();
+    // var frame = new MeteredFrame(); 
+    // frame.init({
+    //     roomURL: "rowaq.metered.live/my-room",
+    // }, $('#metered-frame'));
+    // $('#meet').classList.add('show')
 })
-
-
+//document.getElementById("metered-frame")
+console.log($('#metered-frame'));
 // test database firebase 
 // set(ref(db , uniqueID()) ,{
 //     name:'Yousef',
@@ -209,7 +187,38 @@ $('#join').on('click', async () => {
 //     data:'haha'
 // })
 
-$('.idRoom').on('click',function(){
+$('.idRoom').on('click', function () {
     copyToClipboard(this.textContent);
     this.classList.add('copied')
 })
+
+// const lectures = ref(db, 'المستوي الاول تمهيدي');
+// set(lectures, {
+//     l1: {
+//         name: 'المحاضره الاولي',
+//         url: 'https://youtube.com'
+//     }
+// })
+
+
+// const options = {
+//     method: 'POST',
+//     headers: {
+//       accept: 'application/json',
+//       'content-type': 'application/json',
+//       authorization: 'Basic NURQdHhraFRmdU5jbHRoNXJDVkhFRmswTHVSSXdQWmQwMVJKVXJ5Nzl5Vjp5eTIwMzAw'
+//     },
+//     body: JSON.stringify({record: true, name: 'Test live'})
+//   };
+  
+//   fetch('https://ws.api.video/live-streams', options)
+//     .then(response => response.json())
+//     .then(response => {
+//         console.log(response);
+//         const ifr = response.assets.iframe;
+//         $('#meet').innerHTML=ifr;
+//         $('#meet').classList.add('show')
+        
+//     })
+//     .catch(err => console.error(err));
+console.log('update-2 with turn server');
